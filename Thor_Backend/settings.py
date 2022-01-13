@@ -25,12 +25,13 @@ SECRET_KEY = 'django-insecure-0j-wm3z6g)=478(-501*8u=0lb-dndrzb#&^sdn+3$go3ek+($
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,6 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+# Installed Apps :
+INSTALLED_APPS += [
+    'core',
+    'script_builder'
+]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -67,8 +75,17 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Thor_Backend.wsgi.application'
+# WSGI_APPLICATION = 'Thor_Backend.wsgi.application'
+ASGI_APPLICATION = 'Thor_Backend.asgi.application'
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
