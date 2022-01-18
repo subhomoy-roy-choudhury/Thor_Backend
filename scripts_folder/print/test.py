@@ -1,7 +1,5 @@
 import random
 import unittest
-from optparse import OptionParser
-import inspect
 
 
 class TestSequenceFunctions(unittest.TestCase):

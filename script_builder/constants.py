@@ -1,13 +1,14 @@
+code_main = """
+# Written By Thor AI Script Builder
+
 import logging
 import sys
 
 def script_handler(logger,*args, **kwargs):
-    for _ in range(0, 10):
-        logger.debug("Thor Script Testing")
+    pass
 
 
 if __name__ == '__main__':
-    print("SUCCESS")
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
 
@@ -17,3 +18,15 @@ if __name__ == '__main__':
     logger.addHandler(output_file_handler)
     logger.addHandler(stdout_handler)
     script_handler(logger)
+"""
+
+code_test = """
+# Written By Thor AI Script Builder
+
+import random
+import unittest
+
+
+class TestSequenceFunctions(unittest.TestCase):
+    pass
+"""

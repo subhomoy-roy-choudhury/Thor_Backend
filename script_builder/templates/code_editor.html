@@ -37,6 +37,12 @@
                 <button type="button" class="btn btn-success" onclick="evaluatePython()">
                     <h5>Run</h5>
                 </button>
+                <button type="button" class="btn btn-success" onclick="testPythonCode()">
+                    <h5>Test</h5>
+                </button>
+                <button type="button" class="btn btn-success" id="save_code">
+                    <h5>Save</h5>
+                </button>
             </div>
             <section class="output">
                 <ul class="nav nav-tabs">
@@ -54,6 +60,7 @@
         </div>
   
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.63.3/codemirror.min.js"
         integrity="sha512-XMlgZzPyVXf1I/wbGnofk1Hfdx+zAWyZjh6c21yGo/k1zNC4Ve6xcQnTDTCHrjFGsOrVicJsBURLYktVEu/8vQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -126,7 +133,7 @@
 
 const test = async(dir_path, file_path) => {
     console.log("Starting request ...")
-    let request = await makeRequest('GET', `/script_builder/code/editor/?dir_path=${dir_path}&file_path=${file_path}`);
+    let request = await makeRequest('GET', `/api/script_builder/code/editor/?dir_path=${dir_path}&file_path=${file_path}`);
     console.log("status:", request.status)
     console.log("response:", request.response)
     var contents = JSON.parse(request.response)
@@ -156,6 +163,42 @@ const test = async(dir_path, file_path) => {
         var file_path = current_url.searchParams.get("file_path");
         test(dir_path, file_path)  
     });
+
+    document.getElementById("save_code").addEventListener("click", function() {
+        console.log(editor.getValue());
+        current_url = new URL(window.location.href);
+        dir_path = current_url.searchParams.get("dir_path");
+        file_path = current_url.searchParams.get("file_path");
+        $.post("/api/script_builder/code/save/",
+        {
+            dir_path: dir_path,
+            file_path: file_path,
+            code : editor.getValue()
+        },
+        function(data,status){
+            console.log("Data: " + data + "\nStatus: " + status);
+        });
+
+    });
+
+    function testPythonCode(){
+        current_url = new URL(window.location.href);
+        dir_path = current_url.searchParams.get("dir_path");
+        $.post("/api/script_builder/code/test/",
+        {
+            dir_path: dir_path,
+        },
+        function(data,status){
+            try {
+                // output = JSON.parse(data)
+                console.log('Test Results :- \n',data)
+                // addToOutput(output);
+            } catch (err) {
+                addToOutput(err);
+            }
+            alert("Data: " + data + "\nStatus: " + status);
+        });
+    }
 
 </script>
     

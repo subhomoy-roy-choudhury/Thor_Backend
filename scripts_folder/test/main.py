@@ -1,13 +1,14 @@
+
+# Written By Thor AI Script Builder
+
 import logging
 import sys
 
 def script_handler(logger,*args, **kwargs):
-    for _ in range(0, 10):
-        logger.debug("Thor Script Testing")
+    pass
 
 
 if __name__ == '__main__':
-    print("SUCCESS")
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
 
