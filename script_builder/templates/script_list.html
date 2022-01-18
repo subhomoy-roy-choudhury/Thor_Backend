@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        ul, #myUL {
+          list-style-type: none;
+        }
+
+        #myUL {
+          margin: 0;
+          padding: 0;
+        }
+
+        .caret {
+          cursor: pointer;
+          -webkit-user-select: none; /* Safari 3.1+ */
+          -moz-user-select: none; /* Firefox 2+ */
+          -ms-user-select: none; /* IE 10+ */
+          user-select: none;
+        }
+
+        .caret::before {
+          content: "\25B6";
+          color: black;
+          display: inline-block;
+          margin-right: 6px;
+        }
+
+        .caret-down::before {
+          -ms-transform: rotate(90deg); /* IE 9 */
+          -webkit-transform: rotate(90deg); /* Safari */'
+          transform: rotate(90deg);  
+        }
+
+        .nested {
+          display: none;
+        }
+
+        .active {
+          display: block;
+        }
+    </style>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+</head>
+
+<body>
+
+        <ul id="myUL">
+        </ul>
+
+    <script>
+
+        /*
+            tree directory view for scripts 
+            https://www.w3schools.com/howto/howto_js_treeview.asp
+        */
+        function toggle_tree_view(){
+            var toggler = document.getElementsByClassName("caret");
+            var i;
+
+            for (i = 0; i < toggler.length; i++) {
+              toggler[i].addEventListener("click", function() {
+                this.parentElement.querySelector(".nested").classList.toggle("active");
+                this.classList.toggle("caret-down");
+              });
+            }
+        }
+        // var xhr = new XMLHttpRequest();
+
+        // // Open the connection.
+        // xhr.open('GET', '/script_builder/upload/list/', true);
+
+
+        // // Set up a handler for when the task for the request is complete.
+        // xhr.onload = function () {
+        //   if (xhr.status === 200) {
+        //     // statusDiv.innerHTML = 'Your upload is successful..';
+        //     var data = JSON.parse(xhr.response);
+        //     addData(data);
+        //   } else {
+        //     // statusDiv.innerHTML = 'An error occurred during the upload. Try again.';
+        //     console.log("ERROR")
+        //   }
+        // };
+
+        // // Send the data.
+        // xhr.send();
+
+        const makeRequest = (method, url, data = {}) => {
+          const xhr = new XMLHttpRequest();
+          return new Promise(resolve => {
+            xhr.open(method, url, true);
+            xhr.onload = () => resolve({
+              status: xhr.status,
+              response: xhr.responseText
+            });
+            xhr.onerror = () => resolve({
+              status: xhr.status,
+              response: xhr.responseText
+            });
+            if (method != 'GET') xhr.setRequestHeader('Content-Type', 'application/json');
+            data != {} ? xhr.send(JSON.stringify(data)) : xhr.send();
+          })
+        }
+
+
+        async function addData(){
+            let request = await makeRequest('GET', `/script_builder/upload/list/`);
+            console.log("status:", request.status)
+            console.log("response:", request.response)
+            var data = JSON.parse(request.response).dir_list;
+
+            base_url = window.location.origin;
+            for(var key in data){
+                var tree_ul = ""
+                if (data.hasOwnProperty(key)){
+                    var value=data[key];
+                    // console.log(key,value)
+                    var tree_view_list = ""
+                    for(j=0; j<value.length; j++){
+                        var link = new URL(`scripts/`, base_url);
+                        link.searchParams.append('dir_path', key);
+                        link.searchParams.append('file_path', value[j]);
+                        link = link.href
+                        console.log(link)
+
+                        console.log(`<li>${value[j]}</li>`)
+                        var tree_view_list = tree_view_list + `<a href="${link}"><li>${value[j]}</li></a>`
+                    }  
+                }
+                tree_ul = `<li><span class="caret">${key}</span>
+                                <ul class="nested">
+                                  ${tree_view_list}
+                                </ul>   
+                            </li>`
+                document.getElementById('myUL').innerHTML += tree_ul
+                toggle_tree_view()
+            }
+        }
+
+    window.addEventListener('load', (event) => {
+        console.log('page is fully loaded');
+        /* 
+            https://stackoverflow.com/questions/48969495/in-javascript-how-do-i-should-i-use-async-await-with-xmlhttprequest
+        */
+
+        addData()  
+    });
+
+
+    </script>
+
+</body>
+
+</html>

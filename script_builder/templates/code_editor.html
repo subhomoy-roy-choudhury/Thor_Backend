@@ -66,6 +66,10 @@
 
     const output = document.getElementById("output");
       
+    /* 
+        Refer to the link to debug any issues in the code editor
+        https://www.geeksforgeeks.org/build-python-code-editor-using-codemirror-and-pyodide/
+    */
     const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
         mode: {
             name: "python",
@@ -120,9 +124,9 @@
       })
     }
 
-const test = async() => {
+const test = async(dir_path, file_path) => {
     console.log("Starting request ...")
-    let request = await makeRequest('GET', '/script_builder/upload');
+    let request = await makeRequest('GET', `/script_builder/code/editor/?dir_path=${dir_path}&file_path=${file_path}`);
     console.log("status:", request.status)
     console.log("response:", request.response)
     var contents = JSON.parse(request.response)
@@ -146,7 +150,11 @@ const test = async() => {
         /* 
             https://stackoverflow.com/questions/48969495/in-javascript-how-do-i-should-i-use-async-await-with-xmlhttprequest
         */
-        test()  
+
+        var current_url = new URL(window.location.href);
+        var dir_path = current_url.searchParams.get("dir_path");
+        var file_path = current_url.searchParams.get("file_path");
+        test(dir_path, file_path)  
     });
 
 </script>

@@ -43,7 +43,8 @@ INSTALLED_APPS = [
 
 # Installed Apps :
 INSTALLED_APPS += [
-    'script_builder'
+    'script_builder',
+    'Thor_Controller'
 ]
 
 

@@ -8,6 +8,8 @@ import shutil
 import zipfile, io
 from django.http import HttpResponse, FileResponse
 from django.core.files.storage import FileSystemStorage
+from glob import glob
+import os
 
 # from script_builder.helpers import handlezipfile
 
@@ -19,11 +21,29 @@ fs = FileSystemStorage()
 def thor_logger_view(request):
     # subprocess.Popen('python manage.py bot_init', shell=True)
     # return render(request,'thor_logger.html')
+    return render(request,'script_list.html')
+
+def code_editor_view(request):
+    # subprocess.Popen('python manage.py bot_init', shell=True)
+    # return render(request,'thor_logger.html')
     return render(request,'code_editor.html')
 
+class ScriptBuilderCodeView(APIView):
+    def get(self, request):
+        print(request.GET)
+        dir_path = request.GET.get('dir_path')
+        file_path = request.GET.get('file_path')
+        print(dir_path)
+        with open(os.path.join(dir_path,file_path),'rb') as f:
+            contents = f.readlines()
+            print(contents)
+
+        return Response({
+            "code" : contents,
+            })
 
 class ScriptBuilderView(APIView):
-    def post(self, request):
+    def post(self, request, task=None):
         print(request.GET, request.FILES)
         zip_file = request.FILES['zip_file']
         print(zip_file.__dict__.items())
@@ -41,11 +61,19 @@ class ScriptBuilderView(APIView):
             "status" : 1
         }, 200)
 
-    def get(self, request):
-        with open('scripts_folder/print/main.py','rb') as f:
-            contents = f.readlines()
-            print(contents)
+    def get(self, request, task=None):
+        if task == 'list':
+            dir_list = dict()
+ 
+            rootdir = 'scripts_folder'
+            for file in os.listdir(rootdir):
+                d = os.path.join(rootdir, file)
+                if os.path.isdir(d):
+                    print(d)
+                    # folder_list.append(d)
+                    dir_list[d] = os.listdir(d)
 
-        return Response({
-            "code" : contents,
-            })
+
+            return Response({
+                "dir_list": dir_list
+                })
