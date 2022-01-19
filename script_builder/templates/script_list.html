@@ -65,10 +65,8 @@
 </head>
 
 <body>
-
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Open modal for @mdo</button>
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">Open modal for @fat</button>
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">Open modal for @getbootstrap</button>
+  <!-- Add Folder -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@add_folder">Add Folder</button>
   
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -78,7 +76,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="signup">
+          <form id="add_folder_form">
             <div class="mb-3">
               <label for="recipient-name" class="col-form-label">Recipient:</label>
               <input type="text" class="form-control" id="recipient-name">
@@ -91,18 +89,73 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="add_file">Send message</button>
+          <button type="button" class="btn btn-primary" id="add_folder">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Add Files -->
+
+  <div class="modal fade" id="exampleModal_file" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="add_file_form">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Recipient:</label>
+              <input type="text" class="form-control" id="recipient-name">
+            </div>
+            <div class="mb-3">
+              <label for="folder-path" class="col-form-label">Folder Path:</label>
+              <input type="text" class="form-control" id="folder-path">
+            </div>
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label">Message:</label>
+              <textarea class="form-control" id="message-text-file"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="add_file">Add</button>
         </div>
       </div>
     </div>
   </div>
 
-        <ul id="myUL">
-        </ul>
-    
+<!-- Modal -->
+<div class="modal fade" id="exampleModal_delete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal-body">
+      </div>
+      <div class="mb-3">
+        <label for="delete-folder" class="col-form-label">Confirmation statement</label>
+        <input type="text" class="form-control" id="delete-folder" placeholder="delete">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="delete-button">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script list -->
+<ul id="myUL"></ul>
+
     <script>
-        var exampleModal = document.getElementById('exampleModal')
-        exampleModal.addEventListener('show.bs.modal', function (event) {
+        var exampleModal_add_folder = document.getElementById('exampleModal')
+        exampleModal_add_folder.addEventListener('show.bs.modal', function (event) {
           // Button that triggered the modal
           var button = event.relatedTarget
           // Extract info from data-bs-* attributes
@@ -111,19 +164,181 @@
           // and then do the updating in a callback.
           //
           // Update the modal's content.
-          var modalTitle = exampleModal.querySelector('.modal-title')
-          var modalBodyInput = exampleModal.querySelector('.modal-body input')
+          var modalTitle = exampleModal_add_folder.querySelector('.modal-title')
+          var modalBodyInput = exampleModal_add_folder.querySelector('#recipient-name')
 
           modalTitle.textContent = 'New message to ' + recipient
           modalBodyInput.value = recipient
         })
-        
-        const form  = document.getElementById('signup');
-        document.getElementById("add_file").addEventListener("click", function() {
-          var input = document.getElementById("message-text").value;
-          console.log(input)
 
+
+        var exampleModal_file = document.getElementById('exampleModal_file')
+        exampleModal_file.addEventListener('show.bs.modal', function (event) {
+          // Button that triggered the modal
+          var button = event.relatedTarget
+          // Extract info from data-bs-* attributes
+          var recipient = button.getAttribute('data-bs-whatever')
+          var folder_path = button.getAttribute('data-folder-name')
+          // If necessary, you could initiate an AJAX request here
+          // and then do the updating in a callback.
+          //
+          // Update the modal's content.
+          var modalTitle = exampleModal_file.querySelector('.modal-title')
+          var modalBodyInput = exampleModal_file.querySelector('.modal-body input')
+          var modalAddFileInput = exampleModal_file.querySelector('#folder-path')
+
+          modalTitle.textContent = 'New message to ' + recipient
+          modalBodyInput.value = recipient
+          modalAddFileInput.value = folder_path
+        })
+
+
+        var exampleModal_delete_folder = document.getElementById('exampleModal_delete')
+        exampleModal_delete_folder.addEventListener('show.bs.modal', function (event) {
+          // Button that triggered the modal
+          var button = event.relatedTarget
+          var content_type = button.getAttribute("content-type")
+          if(content_type === "folder"){
+            // Extract info from data-bs-* attributes
+            var recipient = button.getAttribute('data-folder-path')
+            // If necessary, you could initiate an AJAX request here
+            // and then do the updating in a callback.
+            //
+            // Update the modal's content.
+            var modalTitle = exampleModal_delete_folder.querySelector('.modal-title')
+            var modalBody = exampleModal_delete_folder.querySelector('#modal-body')
+            var modalDeleteButton = exampleModal_delete_folder.querySelector('#delete-button')
+
+            modalTitle.textContent = 'New message to ' + recipient
+            modalBody.innerHTML = "Delete " + recipient
+            modalDeleteButton.setAttribute("content-type","folder")
+            modalDeleteButton.setAttribute("button-folder-path",recipient)
+            // modalBodyInput.value = recipient
+          } else if (content_type === "file"){
+            // Extract info from data-bs-* attributes
+            var folder_path = button.getAttribute('data-folder-path')
+            var file_name = button.getAttribute('data-file-name')
+            // If necessary, you could initiate an AJAX request here
+            // and then do the updating in a callback.
+            //
+            // Update the modal's content.
+            var modalTitle = exampleModal_delete_folder.querySelector('.modal-title')
+            var modalBody = exampleModal_delete_folder.querySelector('#modal-body')
+            var modalDeleteButton = exampleModal_delete_folder.querySelector('#delete-button')
+
+            modalTitle.textContent = 'Folder Path ' + folder_path 
+            modalBody.innerHTML = "Delete " + file_name
+            modalDeleteButton.setAttribute("content-type","file")
+            modalDeleteButton.setAttribute("button-file-name",file_name)
+            modalDeleteButton.setAttribute("button-folder-path",folder_path)
+            // modalBodyInput.value = recipient
+          }
+  
+        })
+
+
+
+
+        
+        document.getElementById("delete-button").addEventListener("click", function() {
+          var confirm_statement = document.getElementById("delete-folder").value;
+          
+          var contentType = document.getElementById('delete-button').getAttribute('content-type')
+          if(contentType === "folder"){
+            var folderName = document.getElementById('delete-button').getAttribute('button-folder-path')
+            console.log(confirm_statement)
+            if(confirm_statement === 'delete'){
+                $.post("/api/script_builder/delete/folder/",
+                {
+                    "folder_name" : folderName
+                },
+                function(data,status){
+                    try {
+                        // output = JSON.parse(data)
+                        console.log('Test Results :- \n',data)
+                        // addToOutput(output);
+                    } catch (err) {
+                        addToOutput(err);
+                    }
+                    console.log("Data: " + data + "\nStatus: " + status);
+                  });
+                window.location.reload();
+              }
+              else{
+                console.log("Please check the Confirmation statement")
+              }
+          } else if (contentType === "file"){
+            var folderName = document.getElementById('delete-button').getAttribute('button-folder-path')
+            var fileName = document.getElementById('delete-button').getAttribute('button-file-name')
+            console.log(fileName)
+            if(confirm_statement === 'delete'){
+              $.post("/api/script_builder/delete/file/",
+              {
+                "dir_path" : folderName,
+                "file_name" : fileName
+              },
+              function(data,status){
+                  try {
+                      // output = JSON.parse(data)
+                      console.log('Test Results :- \n',data)
+                      // addToOutput(output);
+                  } catch (err) {
+                      addToOutput(err);
+                  }
+                  console.log("Data: " + data + "\nStatus: " + status);
+                });
+              window.location.reload();
+            }
+            else{
+              console.log("Please check the Confirmation statement")
+            }
+          }
+          
+        });
+
+
+        const form  = document.getElementById('add_folder_form');
+        document.getElementById("add_folder").addEventListener("click", function() {
+          var folderName = document.getElementById("message-text").value;
+          console.log(folderName)
+          $.post("/api/script_builder/add/folder/",
+          {
+              "folder_name" : folderName
+          },
+          function(data,status){
+              try {
+                  // output = JSON.parse(data)
+                  console.log('Test Results :- \n',data)
+                  // addToOutput(output);
+              } catch (err) {
+                  addToOutput(err);
+              }
+              console.log("Data: " + data + "\nStatus: " + status);
+            });
           window.location.reload();
+        });
+
+        const form_file  = document.getElementById('add_file_form');
+        document.getElementById("add_file").addEventListener("click", function() {
+          var folder_path = document.getElementById("folder-path").value;
+          var filename = document.getElementById("message-text-file").value;
+          console.log(filename)
+          $.post("/api/script_builder/add/file/",
+          {
+              "dir_path" : folder_path,
+              "file_name" : filename
+          },
+          function(data,status){
+              try {
+                  // output = JSON.parse(data)
+                  console.log('Test Results :- \n',data)
+                  // addToOutput(output);
+              } catch (err) {
+                  addToOutput(err);
+              }
+              console.log("Data: " + data + "\nStatus: " + status);
+            });
+            location.href = `/api/scripts/?dir_path=${folder_path}&file_path=${filename}`
         });
 
 
@@ -178,22 +393,26 @@
                     // console.log(key,value)
                     var tree_view_list = ""
                     for(j=0; j<value.length; j++){
-                        var link = new URL(`scripts/`, base_url);
+                        var link = new URL(`/api/scripts/`, base_url);
                         link.searchParams.append('dir_path', key);
                         link.searchParams.append('file_path', value[j]);
                         link = link.href
                         console.log(link)
 
                         console.log(`<li>${value[j]}</li>`)
-                        var tree_view_list = tree_view_list + `<a href="${link}"><li>${value[j]}</li></a>`
+                        var tree_view_list = tree_view_list + `<a href="${link}"><li>${value[j]}</li></a><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_delete" data-folder-path="${key}" data-file-name="${value[j]}" content-type="file"> Delete File (${value[j]})</button>  `
                     }  
                 }
                 tree_ul = `<li>
                               <span class="caret">
                                 ${key}
                               </span>
-                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">Open modal for @getbootstrap</button>
-                                <ul class="nested">
+                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_file" data-bs-whatever="@getbootstrap" data-folder-name=${key}>Add File</button>
+                              <!-- Button trigger modal -->
+                              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_delete" data-folder-path="${key}" content-type="folder">
+                                Delete Folder (${key})
+                              </button>  
+                              <ul class="nested">
                                   ${tree_view_list}
                                 </ul>   
                             </li>`

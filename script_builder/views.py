@@ -11,6 +11,7 @@ from django.http import HttpResponse, FileResponse
 from django.core.files.storage import FileSystemStorage
 from glob import glob
 import os
+import shutil
 import json
 import importlib.util
 import unittest
@@ -218,4 +219,35 @@ class AddContent(APIView):
             return Response({
                 "status": 0,
                 "data" : "file already exists"
+            })
+
+
+class DeleteContent(APIView):
+    def post(self,request,file_type=None):
+        if file_type == 'folder':
+            folder_name = request.data.get('folder_name')
+            folder_path = os.path.join(folder_name)
+            if os.path.exists(folder_path):
+                shutil.rmtree(folder_path)
+                return Response({
+                    "satus": 1,
+                    "data": "Archieved Successfully"
+                })
+            return Response({
+                "status": 0,
+                "data" : "folder doesn't exists"
+            })
+        elif file_type == "file":
+            file_name = request.data.get('file_name')
+            dir_path = request.data.get('dir_path')
+            file_path = os.path.join(dir_path,file_name)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+                return Response({
+                    "satus": 1,
+                    "data": "Deleted Successfully"
+                })
+            return Response({
+                "status": 0,
+                "data" : "file doesn't exists"
             })
