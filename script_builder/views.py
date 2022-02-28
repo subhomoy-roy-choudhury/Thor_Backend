@@ -17,11 +17,17 @@ import importlib.util
 import unittest
 from .helpers import TextTestResultWithSuccesses
 from .constants import code_main, code_test
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 # from script_builder.helpers import handlezipfile
 
 
 fs = FileSystemStorage()
+
+SWAGGER_TAGS = ['script_builder']
+
+STRING = openapi.Schema(type=openapi.TYPE_STRING, description='Edited Meta Data for the document')
 
 # Create your views here.
 
@@ -37,17 +43,31 @@ def code_editor_view(request):
 
 class ScriptBuilderCodeView(APIView):
     def get(self, request):
-        print(request.GET)
+        # print(request.GET, request.data,request.META)
+        file_path = request.GET.get('file_path',None)
         dir_path = request.GET.get('dir_path')
-        file_path = request.GET.get('file_path')
-        print(dir_path)
-        with open(os.path.join(dir_path,file_path),'rb') as f:
-            contents = f.readlines()
-            print(contents)
+        if file_path :
+            print(dir_path)
+            with open(os.path.join(dir_path,file_path),'rb') as f:
+                contents = f.readlines()
+                print(contents)
 
-        return Response({
-            "code" : contents,
-            })
+            return Response({
+                "code" : contents,
+                })
+        else :
+            file_list = ['main.py','test.py','requirements.txt']
+            content_dict = dict()
+            for file_path in file_list :
+                with open(os.path.join('scripts_folder',dir_path,file_path),'rb') as f:
+                    contents = f.read()
+                    content_dict[file_path] = contents
+
+            return Response({
+                "code" : content_dict,
+                })
+            
+
 
 class ScriptBuilderView(APIView):
     def post(self, request, task=None):
@@ -78,7 +98,7 @@ class ScriptBuilderView(APIView):
                 if os.path.isdir(d):
                     print(d)
                     # folder_list.append(d)
-                    dir_list[d] = os.listdir(d)
+                    dir_list[file] = os.listdir(d)
 
 
             return Response({
@@ -161,6 +181,10 @@ class SaveCodeView(APIView):
 
 
 class AddContent(APIView):
+    @swagger_auto_schema(request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=[STRING],
+        properties={'folder_name': STRING}), tags=SWAGGER_TAGS)
     def post(self,request,file_type=None):
         if file_type == 'folder':
             folder_name = request.data.get('folder_name')
