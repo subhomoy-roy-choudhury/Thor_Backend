@@ -26,7 +26,6 @@ SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', cast=bool)
-ROOT_URLCONF = 'Thor_Backend.urls'
 
 ALLOWED_HOSTS = ['*']
 
@@ -84,8 +83,8 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'Thor_Backend.wsgi.application'
-ASGI_APPLICATION = 'Thor_Backend.asgi.application'
+WSGI_APPLICATION = 'Thor_Backend.wsgi.application'
+# ASGI_APPLICATION = 'Thor_Backend.asgi.application'
 
 CHANNEL_LAYERS = {
     "default": {
@@ -145,7 +144,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
