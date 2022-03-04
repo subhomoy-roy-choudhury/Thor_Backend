@@ -83,8 +83,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Thor_Backend.wsgi.application'
-# ASGI_APPLICATION = 'Thor_Backend.asgi.application'
+# WSGI_APPLICATION = 'Thor_Backend.wsgi.application'
+ASGI_APPLICATION = 'Thor_Backend.asgi.application'
 
 CHANNEL_LAYERS = {
     "default": {
