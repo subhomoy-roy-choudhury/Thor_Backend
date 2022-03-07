@@ -50,6 +50,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'script_builder',
+    'thor_controller'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

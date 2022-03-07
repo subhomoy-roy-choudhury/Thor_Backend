@@ -34,31 +34,31 @@ application= ProtocolTypeRouter(
     }
 )
 
-# Ngrok Firestore Integration
+# # Ngrok Firestore Integration
 
-addrport = urlparse("http://{}".format(sys.argv[-1]))
-port = addrport.port if addrport.netloc and addrport.port else 8000
+# addrport = urlparse("http://{}".format(sys.argv[-1]))
+# port = addrport.port if addrport.netloc and addrport.port else 8000
 
-# bind_tls=True #for HTTPS
-public_url = ngrok.connect(port).public_url
-print("ngrok tunnel \"{}\" -> \"http://127.0.0.1:{}\"".format(public_url, 8000))
+# # bind_tls=True #for HTTPS
+# public_url = ngrok.connect(port).public_url
+# print("ngrok tunnel \"{}\" -> \"http://127.0.0.1:{}\"".format(public_url, 8000))
 
-firebaseConfig = {
-      'apiKey': config('FIREBASE_API_KEY'),
-      'authDomain': config('FIREBASE_AUTH_DOMAIN'),
-      'databaseURL': config('FIREBASE_DATABASE_URL'),
-      'projectId': config('FIREBASE_PROJECT_ID'),
-      'storageBucket': config('FIREBASE_STORAGE_BUCKET'),
-      'messagingSenderId': config('FIREBASE_MESSAGING_SENDER_ID'),
-      'appId': config('FIREBASE_APP_ID'),
-      'measurementId': config('FIREBASE_MEASUREMENT_ID')
- }
+# firebaseConfig = {
+#       'apiKey': config('FIREBASE_API_KEY'),
+#       'authDomain': config('FIREBASE_AUTH_DOMAIN'),
+#       'databaseURL': config('FIREBASE_DATABASE_URL'),
+#       'projectId': config('FIREBASE_PROJECT_ID'),
+#       'storageBucket': config('FIREBASE_STORAGE_BUCKET'),
+#       'messagingSenderId': config('FIREBASE_MESSAGING_SENDER_ID'),
+#       'appId': config('FIREBASE_APP_ID'),
+#       'measurementId': config('FIREBASE_MEASUREMENT_ID')
+#  }
 
-firebase = pyrebase.initialize_app(firebaseConfig)
-db = firebase.database()
+# firebase = pyrebase.initialize_app(firebaseConfig)
+# db = firebase.database()
 
-# jenna = db.child("ngrok-url").get()
-# print(jenna.val())
+# # jenna = db.child("ngrok-url").get()
+# # print(jenna.val())
 
 
-db.update({"ngrok-url": public_url})
+# db.update({"ngrok-url": public_url})
